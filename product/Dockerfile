@@ -1,8 +1,6 @@
-FROM node:14.10.0
-WORKDIR /app
-COPY package*.json /app/
+FROM openjdk:15-jdk-alpine
+COPY target/*SNAPSHOT.jar app.jar
+EXPOSE 8080
 ENV TZ=Asia/Seoul
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-RUN npm install
-COPY . /app
-CMD ["npm", "run", "docker"]
+ENTRYPOINT ["java","-Xmx400M","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar","--spring.profiles.active=docker"]
